@@ -66,3 +66,16 @@ END;
 $$
 LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION insert_prov()RETURNS VOID AS
+$$
+BEGIN
+	SELECT insert_unif(); 
+	SELECT insert_epi(); 
+	SELECT insert_main(); 
+END;
+$$
+LANGUAGE plpgsql;
+
+
+
+
