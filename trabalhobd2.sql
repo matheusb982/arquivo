@@ -23,3 +23,6 @@ value INTEGER) INHERITS (provider);
 
 CREATE TABLE maintenance (cod INTEGER, type VARCHAR(10),
 value INTEGER) INHERITS (provider);
+
+CREATE TABLE iower_contract (cnpj VARCHAR(11),
+value INTEGER, type VARCHAR(10));
