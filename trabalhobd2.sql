@@ -1,4 +1,4 @@
-CREATE DATABASE contract;
+create database contract;
 
 CREATE TYPE location AS (rua VARCHAR(10), 
 numero VARCHAR(10), complemento VARCHAR(30));
@@ -26,3 +26,43 @@ value INTEGER) INHERITS (provider);
 
 CREATE TABLE iower_contract (cnpj VARCHAR(11),
 value INTEGER, type VARCHAR(10));
+
+CREATE OR REPLACE FUNCTION insert_unif()RETURNS VOID AS
+$$
+DECLARE registro RECORD;
+BEGIN
+	SELECT cnpj, value, type INTO registro FROM uniform;
+	IF registro.value < 20000 THEN
+		INSERT INTO iower_contract(cnpj, value, type)VALUES(
+		registro.cnpj, registro.value, registro.type);
+	END IF;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION insert_epi()RETURNS VOID AS
+$$
+DECLARE registro RECORD;
+BEGIN
+	SELECT cnpj, value, type INTO registro FROM epi;
+	IF registro.value < 20000 THEN
+		INSERT INTO iower_contract(cnpj, value, type)VALUES(
+		registro.cnpj, registro.value, registro.type);
+	END IF;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION insert_main()RETURNS VOID AS
+$$
+DECLARE registro RECORD;
+BEGIN
+	SELECT cnpj, value, type INTO registro FROM maintenance;
+	IF registro.value < 20000 THEN
+		INSERT INTO iower_contract(cnpj, value, type)VALUES(
+		registro.cnpj, registro.value, registro.type);
+	END IF;
+END;
+$$
+LANGUAGE plpgsql;
+
