@@ -62,8 +62,31 @@ int main(){
 		
 	float media = soma / funcs.size();
 	
+	 int i, j, atual;
+	 float minimo = 0;
+	 float maximo = 0;
+ 
+       for (i = 1; i < funcs.size(); i++)
+       {
+             atual = funcs[i].value;
+             j = i - 1;
+ 
+             while ((j >= 0) && (atual < funcs[j].value))
+             {
+                    funcs[j + 1].value = funcs[j].value;
+                    j = j - 1;
+             }
+ 
+             funcs[j + 1].value = atual;
+       }
+       
+       minimo = funcs[0].value;
+       maximo = funcs[funcs.size()-1].value;
+	
 	ofstream saida("estatistica.txt", ofstream::out);
 	saida << "Media: " << media << endl;
+	saida << "Valor Menor: " << minimo << endl;
+	saida << "Valor Maior: " << maximo << endl;
 	
 	ifs.close();
 	
