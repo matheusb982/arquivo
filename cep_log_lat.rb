@@ -3,11 +3,11 @@ require "uri"
 require 'json'
 
 puts "Digite seu CEP:"
-cepp = gets.to_s
+cep = gets.to_s
 
 domain = "http://www.cepaberto.com/api/v2/ceps.json"
 uri = URI(domain)
-params = {'cep' => cepp[0..7]}
+params = {'cep' => cep[0..7]}
 headers = { "Authorization" => "Token token=45a1781f8656f13874bdbe34ad745e12" }
 
 http = Net::HTTP.new(uri.host, uri.port)
