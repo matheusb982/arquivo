@@ -1,0 +1,64 @@
+def diff_demonstrative_total
+  last_demonstrative = params[:hour]
+
+  @differ_demonst_power_hour = InstantCircuitMeasure.last.differ_power_demonstrative(current_user, 0)
+
+  @diff_demonstrative_hour = InstantCircuitMeasure.last.diff_result_hour_charge(current_user, last_demonstrative, 0, 0)
+
+  #@diff_demonstrative_total = InstantCircuitMeasure.last.diff_result_hour_charge(current_user, last_demonstrative, 1, 0)
+  @diff_demonstrative_charge = InstantCircuitMeasure.last.diff_result_hour_charge(current_user, last_demonstrative, 1, 0)
+  @diff_demonstrative_solar = InstantCircuitMeasure.last.diff_result_hour_charge(current_user, last_demonstrative, 1, 1)
+  @diff_demonstrative_wind = InstantCircuitMeasure.last.diff_result_hour_charge(current_user, last_demonstrative, 1, 2)
+
+  @diff_demonstrative_charge = @diff_demonstrative_charge ? @diff_demonstrative_charge : 0
+  @diff_demonstrative_solar = @diff_demonstrative_solar ? @diff_demonstrative_solar : 0
+  @diff_demonstrative_wind = @diff_demonstrative_wind ? @diff_demonstrative_wind : 0
+
+  @diff_demonstrative_total = @diff_demonstrative_charge - (@diff_demonstrative_solar + (@diff_demonstrative_wind))
+
+  respond_to do |format|
+    format.js
+  end
+
+
+  <% if @diff_demonstrative_hour %>
+
+      var demonstrative_time = [];
+
+      <% if @diff_demonstrative_solar!=0 and @diff_demonstrative_wind!=0 and @diff_demonstrative_charge!=0 %>
+        demonstrative_time.push('<%=raw @diff_demonstrative_hour %>');
+
+        demonstrative_hour_Chart.config.data.labels.shift();
+        demonstrative_hour_Chart.config.data.datasets.forEach(function (dataset, datasetIndex) {
+            dataset.data.shift();
+        });
+
+        demonstrative_hour_Chart.config.data.datasets[0].data.push(<%=raw @diff_demonstrative_total %>);
+        demonstrative_hour_Chart.config.data.datasets[1].data.push(<%=raw -@diff_demonstrative_solar %>);
+        demonstrative_hour_Chart.config.data.datasets[2].data.push(<%=raw -@diff_demonstrative_wind %>);
+        demonstrative_hour_Chart.config.data.datasets[3].data.push(<%=raw @diff_demonstrative_charge %>);
+
+        demonstrative_hour_Chart.config.data.labels.push(demonstrative_time);
+        demonstrative_hour_Chart.update();
+
+        last_demonstrative = <%= @diff_demonstrative_hour.gsub(/[:]/, '')%>
+
+        document.getElementById("demonstrative_energy").innerHTML = '<%= @differ_demonst_power_hour %>';
+
+      <% end %>
+
+  <% end %>
+
+ShowroomController
+
+  demonstrative_total_last = InstantCircuitMeasure.last.demonstrative_total_charge_hour(current_user)
+
+  @demonstrative_total_hour = demonstrative_total_last[0]
+
+  @demonstrative_total_hour_power = demonstrative_total_last[1]
+  @demonstrative_charge_hour_power = demonstrative_total_last[2]
+  @demonstrative_solar_hour_power = demonstrative_total_last[3]
+  @demonstrative_wind_hour_power = demonstrative_total_last[4]
+
+
+  
